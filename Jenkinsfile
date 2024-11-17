@@ -20,12 +20,15 @@ pipeline {
         }
         stage('ZAP scan') {
             steps {
+                script {
+                    sh 'mkdir -p /home/michal/devsecops/abcd-student/.zap/reports'
+                }
                 sh 'mkdir -p results/'
                 sh '''
                     docker run --name juice-shop -d --rm \
                     -p 3000:3000 \
                     bkimminich/juice-shop
-                    sleep 20
+                    sleep 15
                 '''
                 sh '''
                     docker run --name zap \
