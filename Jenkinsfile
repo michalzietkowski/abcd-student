@@ -12,11 +12,11 @@ pipeline {
                 }
             }
         }
-//         stage('Prepare') {
-//             steps {
-//                 sh 'mkdir -p results/'
-//             }
-//         }
+        stage('Prepare') {
+            steps {
+                sh 'mkdir -p results/'
+            }
+        }
         stage('DAST') {
             steps {
                 sh '''
@@ -48,25 +48,6 @@ pipeline {
             echo 'Archiving results...'
             archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
             echo 'Sending reports to DefectDojo...'
-            defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michalzietkowski@gmail.com')
-        }
-            post {
-                always {
-                    sh '''
-                        docker cp zap:/zap/wrk/reports/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
-                        docker cp zap:/zap/wrk/reports/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
-                        docker stop zap juice-shop
-                        docker rm zap
-                    '''
-                }
-            }
-        }
-    }
-    post {
-        always {
-            echo 'Archiving results...'
-            archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
-            echo 'Sending to DefectDojo...'
             defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michalzietkowski@gmail.com')
         }
     }
