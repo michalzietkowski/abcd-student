@@ -23,7 +23,7 @@ pipeline {
                 script {
                     sh 'mkdir -p /home/michal/devsecops/abcd-student/.zap/reports'
                 }
-                sh 'mkdir -p results/'
+                sh 'mkdir -p reports/'
                 sh '''
                     docker run --name juice-shop -d --rm \
                     -p 3000:3000 \
