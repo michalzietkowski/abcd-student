@@ -12,11 +12,11 @@ pipeline {
                 }
             }
         }
-        stage('Prepare') {
-            steps {
-                sh 'mkdir -p results/'
-            }
-        }
+//         stage('Prepare') {
+//             steps {
+//                 sh 'mkdir -p results/'
+//             }
+//         }
         stage('DAST') {
             steps {
                 sh '''
