@@ -28,11 +28,10 @@ pipeline {
                     sleep 5
                 '''
                 sh '''
-                    docker run --user root --name zap \
-                    --add-host=host.docker.internal:host-gateway \
+                    docker run --name zap \
                     -v /home/michal/devsecops/abcd-student/.zap:/zap/wrk/:rw \
-                    -t ghcr.io/zaproxy/zaproxy:stable bash -c \
-                    "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive.yaml" || true
+                    -t ghcr.io/zaproxy/zaproxy:stable \
+                    bash -c "zap.sh -cmd -addonupdate; zap.sh -cmd addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive.yaml" || true
                 '''
             }
             post {
@@ -49,6 +48,9 @@ pipeline {
     }
     post {
         always {
+            echo 'Archiving results...'
+            archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
+            echo 'Sending to DefectDojo...'
             defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michalzietkowski@gmail.com')
         }
     }
