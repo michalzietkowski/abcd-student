@@ -42,24 +42,24 @@ pipeline {
 //                     '''
 //                 }
 //             }
-//         stage('OSV scanner') {
-//             steps {
-//                 sh 'mkdir -p results/'
-//                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/osv_report.json || true'
-//             }
-//         }
+        stage('OSV scanner') {
+            steps {
+                sh 'mkdir -p results/'
+                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/osv_report.json || true'
+            }
+        }
 //         stage('TruffleHog') {
 //             steps {
 //                 sh 'mkdir -p results/'
 //                 sh 'trufflehog git file://. --only-verified --json > results/truffle_hog_report.json'
 //             }
 //         }
-        stage('Semgrep') {
-            steps {
-                sh 'mkdir -p results/'
-                sh 'semgrep scan --config auto --json > results/semgrep_report.json'
-            }
-        }
+//         stage('Semgrep') {
+//             steps {
+//                 sh 'mkdir -p results/'
+//                 sh 'semgrep scan --config auto --json > results/semgrep_report.json'
+//             }
+//         }
 
     }
     post {
@@ -68,8 +68,8 @@ pipeline {
             archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
             echo 'Sending reports to DefectDojo...'
 //             defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michalzietkowski@gmail.com')
-//             defectDojoPublisher(artifact: 'results/osv_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michalzietkowski@gmail.com')
-            defectDojoPublisher(artifact: 'results/semgrep_report.json', productName: 'Juice Shop', scanType: 'Semgrep JSON Report', engagementName: 'michalzietkowski@gmail.com')
+             defectDojoPublisher(artifact: 'results/osv_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michalzietkowski@gmail.com')
+//             defectDojoPublisher(artifact: 'results/semgrep_report.json', productName: 'Juice Shop', scanType: 'Semgrep JSON Report', engagementName: 'michalzietkowski@gmail.com')
 //             defectDojoPublisher(artifact: 'results/truffle_hog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'michalzietkowski@gmail.com')
        }
     }
